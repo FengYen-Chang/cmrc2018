@@ -14,14 +14,12 @@ import re
 import argparse
 import json
 import sys
-reload(sys)
-sys.setdefaultencoding('utf8')
 import nltk
 import pdb
 
 # split Chinese with English
 def mixed_segmentation(in_str, rm_punc=False):
-	in_str = str(in_str).decode('utf-8').lower().strip()
+	in_str = str(in_str).lower().strip()
 	segs_out = []
 	temp_str = ""
 	sp_char = ['-',':','_','*','^','/','\\','~','`','+','=',
@@ -30,7 +28,7 @@ def mixed_segmentation(in_str, rm_punc=False):
 	for char in in_str:
 		if rm_punc and char in sp_char:
 			continue
-		if re.search(ur'[\u4e00-\u9fa5]', char) or char in sp_char:
+		if re.search(u'[\u4e00-\u9fa5]', char) or char in sp_char:
 			if temp_str != "":
 				ss = nltk.word_tokenize(temp_str)
 				segs_out.extend(ss)
@@ -49,7 +47,7 @@ def mixed_segmentation(in_str, rm_punc=False):
 
 # remove punctuation
 def remove_punctuation(in_str):
-	in_str = str(in_str).decode('utf-8').lower().strip()
+	in_str = str(in_str).lower().strip()
 	sp_char = ['-',':','_','*','^','/','\\','~','`','+','=',
 			   '，','。','：','？','！','“','”','；','’','《','》','……','·','、',
 			   '「','」','（','）','－','～','『','』']
@@ -97,7 +95,7 @@ def evaluate(ground_truth_file, prediction_file):
 					skip_count += 1
 					continue
 
-				prediction 	= str(prediction_file[query_id]).decode('utf-8')
+				prediction 	= str(prediction_file[query_id])
 				f1 += calc_f1_score(answers, prediction)
 				em += calc_em_score(answers, prediction)
 
@@ -149,4 +147,3 @@ if __name__ == '__main__':
 	output_result['SKIP'] = SKIP
 	output_result['FILE'] = args.prediction_file
 	print(json.dumps(output_result))
-
